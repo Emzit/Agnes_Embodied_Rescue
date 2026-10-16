@@ -1,0 +1,106 @@
+import { performance } from 'node:perf_hooks'
+import { describe, expect, it } from 'vitest'
+import { UIProjectionCell } from '../src/project/ui.js'
+import { foldEvents, reduce } from '../src/reduce/reducer.js'
+import type { LedgerState } from '../src/reduce/state.js'
+import type { Event } from '../src/types.js'
+import { toolHeavyLedger } from '../testkit/tool-heavy-ledger.js'
+
+// Timing guards. The copy budget is what gates a merge; these back it up with wall-clock evidence
+// and give up as soon as one run is over budget, so a regression fails fast instead of timing out.
+
+/** Rows of a `calls`-call session that stop with an error once `budgetMs` has passed. */
+function* within(calls: number, budgetMs: number): Generator<Event> {
+  const start = performance.now()
+  let n = 0
+  for (const row of toolHeavyLedger({ calls })) {
+    if (++n % 1000 === 0 && performance.now() - start > budgetMs)
+      throw new Error(`${calls} calls: over the ${budgetMs} ms budget after ${n} rows`)
+    yield row
+  }
+}
+
+/** The fastest of `runs` runs of `work`, each held to `budgetMs`. */
+function fastest(runs: number, budgetMs: number, work: (budgetMs: number) => void): number {
+  let best = Number.POSITIVE_INFINITY
+  for (let i = 0; i < runs; i++) {
+    const start = performance.now()
+    work(budgetMs)
+    best = Math.min(best, performance.now() - start)
+  }
+  return best
+}
+
+/**
+ * The smallest large-to-small time ratio over `pairs` back-to-back pairs of runs. Each large run
+ * follows its own small run at once, so a burst of load on a shared runner slows both sides of the
+ * pair it lands in, instead of only the side measured while it lasted. The large run's fail-fast
+ * budget follows the small run it is paired with, for the same reason. One untimed small run warms
+ * the code first, so a cold first run cannot inflate the denominator and hide a slow large run.
+ */
+function bestRatio(
+  pairs: number,
+  smallBudgetMs: number,
+  small: (budgetMs: number) => void,
+  largeBudget: (smallMs: number) => number,
+  large: (budgetMs: number) => void,
+): number {
+  small(smallBudgetMs)
+  let best = Number.POSITIVE_INFINITY
+  for (let i = 0; i < pairs; i++) {
+    const smallMs = fastest(1, smallBudgetMs, small)
+    best = Math.min(best, fastest(1, largeBudget(smallMs), large) / smallMs)
+  }
+  return best
+}
+
+const fold = (calls: number) => (budgetMs: number) => {
+  foldEvents(within(calls, budgetMs))
+}
+
+const uiFold = (calls: number) => (budgetMs: number) => {
+  const cell = new UIProjectionCell('tool-heavy', 'main')
+  for (const row of within(calls, budgetMs)) cell.apply([row])
+  cell.sealReplay()
+}
+
+// Alone a 4k fold takes about 0.1 s and a 16k fold about 0.4 s, and a loaded CI runner can be ten
+// times slower. A 16k run's fail-fast budget therefore follows a measured 4k run, so machine load
+// slows both sides alike and only a clearly super-linear fold gives up early.
+const largeFoldBudget = (small: number): number => Math.max(3_000, small * 16)
+
+describe('folding scales linearly with the session', () => {
+  it('folds 16k calls in at most eight times the time of 4k', { timeout: 120_000 }, () => {
+    expect(bestRatio(5, 2_500, fold(4000), largeFoldBudget, fold(16_000))).toBeLessThan(8)
+  })
+
+  it('appends one more tool step at the head of a 16k-call session in a bounded time', {
+    timeout: 120_000,
+  }, () => {
+    const head = foldEvents(within(16_000, largeFoldBudget(fastest(1, 2_500, fold(4000)))))
+    const rows = [...toolHeavyLedger({ calls: 16_001 })]
+    const step = rows.filter((row) => row.seq > head.lastSeq)
+    const times: number[] = []
+    for (let i = 0; i < 21; i++) {
+      const start = performance.now()
+      // The relation check's trial, the tracker and the UI cell each fold the batch once.
+      for (let pass = 0; pass < 3; pass++) {
+        let s: LedgerState = head
+        for (const row of step) s = reduce(s, row)
+      }
+      times.push(performance.now() - start)
+    }
+    times.sort((a, b) => a - b)
+    expect(times[10]).toBeLessThan(5)
+  })
+
+  it('builds the UI cell of 16k calls in at most eight times the time of 4k', {
+    timeout: 120_000,
+  }, () => {
+    // Alone these take about 0.3 s and 1.1 s, and a loaded CI runner can be five times slower. The
+    // large run's fail-fast budget therefore follows the measured small run, so machine load slows
+    // both sides alike and only a clearly super-linear fold gives up early.
+    const ratio = bestRatio(5, 5_000, uiFold(4000), (small) => Math.max(6_000, small * 16), uiFold(16_000))
+    expect(ratio).toBeLessThan(8)
+  })
+})

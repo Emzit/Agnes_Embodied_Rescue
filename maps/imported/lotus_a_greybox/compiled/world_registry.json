@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "frame_id": "map",
+  "nearest_threshold": 0.45,
+  "locations": [
+    {
+      "id": "Start",
+      "name": "Start",
+      "type": "start",
+      "pose": {
+        "x": 0,
+        "y": -6.2,
+        "yaw": 0,
+        "frame_id": "map"
+      },
+      "adjacency": [
+        "A_Main"
+      ]
+    },
+    {
+      "id": "A_Site",
+      "name": "A Site",
+      "type": "room",
+      "pose": {
+        "x": 5.1,
+        "y": 2.95,
+        "yaw": 0,
+        "frame_id": "map"
+      },
+      "bounds": {
+        "min_x": 3,
+        "max_x": 7.2,
+        "min_y": 1.1,
+        "max_y": 4.8
+      },
+      "adjacency": [
+        "A_Main",
+        "A_Tree",
+        "A_Link"
+      ]
+    },
+    {
+      "id": "A_Main",
+      "name": "A Main",
+      "type": "corridor",
+      "pose": {
+        "x": 0.5,
+        "y": -6.25,
+        "yaw": 0,
+        "frame_id": "map"
+      },
+      "bounds": {
+        "min_x": -1.5,
+        "max_x": 2.5,
+        "min_y": -7.4,
+        "max_y": -5.1
+      },
+      "adjacency": [
+        "Start",
+        "A_Site",
+        "A_Tree",
+        "A_Link"
+      ]
+    },
+    {
+      "id": "A_Tree",
+      "name": "A Tree",
+      "type": "corridor",
+      "pose": {
+        "x": 5,
+        "y": -4.2,
+        "yaw": 0,
+        "frame_id": "map"
+      },
+      "bounds": {
+        "min_x": 3.5,
+        "max_x": 6.5,
+        "min_y": -7.4,
+        "max_y": -1
+      },
+      "adjacency": [
+        "A_Main",
+        "A_Site",
+        "A_Link"
+      ]
+    },
+    {
+      "id": "A_Link",
+      "name": "A Link",
+      "type": "corridor",
+      "pose": {
+        "x": 10.5,
+        "y": -4.2,
+        "yaw": 0,
+        "frame_id": "map"
+      },
+      "bounds": {
+        "min_x": 8.5,
+        "max_x": 12.5,
+        "min_y": -7.4,
+        "max_y": -1
+      },
+      "adjacency": [
+        "A_Tree",
+        "A_Site",
+        "A_Main"
+      ]
+    },
+    {
+      "id": "D_A_Tree_interaction",
+      "name": "D_A_Tree interaction pose",
+      "type": "corridor",
+      "pose": {
+        "x": 4.1,
+        "y": -0.4,
+        "yaw": 1.57,
+        "frame_id": "map"
+      },
+      "adjacency": []
+    },
+    {
+      "id": "D_A_MainTree_interaction",
+      "name": "D_A_MainTree interaction pose",
+      "type": "corridor",
+      "pose": {
+        "x": 2.2,
+        "y": -6.2,
+        "yaw": 0,
+        "frame_id": "map"
+      },
+      "adjacency": []
+    },
+    {
+      "id": "D_A_Link_interaction",
+      "name": "D_A_Link interaction pose",
+      "type": "corridor",
+      "pose": {
+        "x": 9.25,
+        "y": 2.5,
+        "yaw": 3.14,
+        "frame_id": "map"
+      },
+      "adjacency": []
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+<!-- Retain door approach waypoints until within the native path tolerance. Use one bounded costmap
+     recovery for transient obstacles; never spin/back up beside a door jamb.
+     Native Nav2 controllers retain their original footprint and collision checks. -->
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <RecoveryNode number_of_retries="1" name="DoorwayNavigationRecovery">
+      <PipelineSequence name="DoorwayCentreNavigation">
+        <RateController hz="2.0">
+          <ReactiveSequence>
+            <RemovePassedGoals input_goals="{goals}" output_goals="{goals}" radius="0.30"/>
+            <ComputePathThroughPoses goals="{goals}" path="{path}" planner_id="GridBased" error_code_id="{compute_path_error_code}"/>
+          </ReactiveSequence>
+        </RateController>
+        <FollowPath path="{path}" controller_id="FollowPath" error_code_id="{follow_path_error_code}"/>
+      </PipelineSequence>
+      <Sequence name="RefreshLiveObstaclesOnce">
+        <ClearEntireCostmap name="ClearDoorwayLocal" service_name="local_costmap/clear_entirely_local_costmap"/>
+        <ClearEntireCostmap name="ClearDoorwayGlobal" service_name="global_costmap/clear_entirely_global_costmap"/>
+        <Wait wait_duration="1.0"/>
+      </Sequence>
+    </RecoveryNode>
+  </BehaviorTree>
+</root>

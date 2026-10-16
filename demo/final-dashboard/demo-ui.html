@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agnes · 救援机器人现场演示</title><link rel="stylesheet" href="/demo-ui.css"><script type="module" src="/demo-ui.js"></script><script type="module" src="/demo-recording.js"></script></head>
+<body><header class="page-head"><div class="brand"><div><div class="eyebrow">AGNES / EMBODIED RESCUE</div><h1>救援机器人现场演示</h1></div></div><div class="head-right"><span class="pill dark">LIVE · 实时模式</span><span class="pill" id="system-ready">连接检查中</span><button id="choose-map">选择地图 · <span id="active-map-name">读取中</span> ▾</button><button id="open-import">上传骨架</button><button id="enter-presentation" aria-controls="presentation-controls" aria-expanded="false" title="演示视图 · Alt + Shift + D 切换双画面">进入演示</button></div></header>
+<section id="presentation-controls" class="presentation-controls" aria-label="演示视图控制" hidden>
+<div class="presentation-actions"><div class="presentation-views" role="group" aria-label="画面布局"><button id="presentation-full" type="button" aria-pressed="true" title="显示 Agnes 原生对话与实时画面">完整页面</button><button id="presentation-dual" type="button" aria-pressed="false" title="放大机器人第一视角与实时地图 · Alt + Shift + D">双画面</button></div><button id="exit-presentation" type="button" title="退出演示视图 · Esc">退出演示 <kbd>Esc</kbd></button></div>
+</section>
+<main class="workspace">
+<section class="card chat-card" aria-labelledby="chat-title"><div class="card-head"><div><div class="eyebrow">NATIVE AGNES HARNESS</div><h2 id="chat-title">与 Agnes 对话</h2></div><div class="actions"><button id="restore-session" title="重新打开当前绑定的原生会话">演示会话</button><a id="open-native" class="button dark" target="_blank" rel="noopener">独立打开 ↗</a></div></div>
+<div class="chat-frame-wrap"><div id="scene-chat-block" class="scene-chat-block" hidden><strong>正在切换物理场景</strong><p>暂停输入，等待真实场景和演示会话重新就绪。</p></div><iframe id="native-chat" title="Agnes Harness 官方原生 Web 聊天" allow="clipboard-write" referrerpolicy="no-referrer"></iframe><div class="frame-wait" id="frame-wait"><strong>正在连接原生 Agnes</strong><p>需要转发原生 Web 与 WebSocket 端口。</p></div></div>
+<div class="chat-foot"><div class="connection-line"><span class="dot"></span><span id="chat-connection">等待真实 Session</span><a href="/api/demo-ui/session" target="_blank">核对事件 ↗</a></div><div class="session-id" id="session-id">Session —</div><p id="chat-recovery" hidden></p><details class="chat-help"><summary>操作提示与结果核对</summary><p>在原生聊天中输入任务；审批、停止与执行记录均在聊天中操作。实时面板绑定当前演示会话，切换其它聊天后请点击“演示会话”恢复。任务结果请结合本轮工具记录和实时画面核对。</p></details></div></section>
+<div class="monitor-column">
+<section class="card map-card" aria-labelledby="map-title"><div class="card-head"><div><div class="eyebrow">LIVE NAVIGATION</div><h2 id="map-title">实时位置与导航</h2></div><div class="actions"><span id="map-status" class="pill">等待 ROS2</span><button id="zoom-out" aria-label="地图缩小">−</button><button id="zoom-reset">适应</button><button id="zoom-in" aria-label="地图放大">＋</button></div></div>
+<div class="map-wrap"><canvas id="live-map" aria-label="ROS2 实际占据地图与实时机器人位姿"></canvas><div class="map-warning" id="map-warning">等待 ROS2 /map 与 TF</div><div id="map-hover" class="map-hover" role="tooltip" hidden></div></div>
+<div class="map-legend" aria-label="地图标记说明"><span><svg class="start-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="m2 7 6-5 6 5M4 6v8h8V6M7 14v-4h2v4"/></svg>起点</span><span><i class="robot-dot"></i>机器人 / 轨迹</span><span><i class="goal-ring"></i>导航目标</span></div>
+<div id="map-room-key" class="map-room-key" aria-label="房间索引"></div>
+<div class="telemetry"><div><span>机器人位置 · map / m</span><strong id="pose-value">—</strong></div><div><span>朝向 / 真实导航</span><strong id="nav-value">—</strong></div><div><span>当前工具目标</span><strong id="goal-value">暂无</strong></div></div><div class="map-source" id="map-source">静态地图先验与实时机器人信息分别呈现；环境内容未知，直到实际观测。</div>
+</section>
+<section class="card camera-card" aria-labelledby="camera-title"><div class="card-head"><div><div class="eyebrow">GAZEBO / FIRST PERSON</div><h2 id="camera-title">机器人第一视角</h2></div><span id="camera-status" class="pill">等待画面</span></div>
+<div class="camera-stage"><img id="camera-image" alt="Gazebo Camera 当前真实相机帧" hidden><div id="camera-empty"><span class="camera-symbol">◉</span><strong>无实时画面</strong><p>正在等待 /camera/image_raw 最新帧</p></div><span class="camera-label">REAL SENSOR · /camera/image_raw</span></div><div class="camera-meta"><span id="camera-time">最新帧时间 —</span><span id="camera-frame">—</span></div></section>
+<section class="card mission-card" aria-label="绑定会话的本次任务状态"><div class="mission-top"><div class="mission-label"><span class="eyebrow">CURRENT SESSION / MISSION</span><strong id="mission-state">IDLE</strong></div><span id="mission-stage">等待原生聊天任务</span><a id="trace-link" target="_blank" rel="noopener">原生轨迹 ↗</a></div><div class="progress-track" id="progress-track"><div></div></div><div class="mission-bottom"><span id="mission-task">在左侧输入“现在机器人在哪里？”开始只读检查。</span><button id="show-evidence">事件与报告</button></div><div id="previous-mission" class="historical">历史任务状态单独显示</div></section>
+</div></main>
+<footer class="page-foot"><span>Agnes Harness → Rescue Plugin → Robot MCP → ROS2 / Nav2 / Gazebo</span><span id="last-sync">连接中…</span></footer>
+<dialog id="import-dialog"><div class="dialog-head"><div><div class="eyebrow">MAP LIBRARY / REAL SCENE SWITCH</div><h2>地图骨架 · 选择与上传</h2></div><button id="close-import" aria-label="关闭骨架预览">关闭</button></div>
+<p>上传只保存并预览。确认切换后才重建本项目 Gazebo / ROS 地图，并以新的 seed 随机生成人员和物品；不会自动开始导航。</p>
+<label for="map-select">已保存地图</label><div class="upload-row"><select id="map-select" aria-label="选择地图骨架"></select><button id="preview-selected">查看骨架</button></div>
+<p id="selected-description"></p>
+<label class="confirm-label"><input id="confirm-scene" type="checkbox">我确认当前没有任务，允许重建本项目物理场景并创建新演示会话。</label>
+<div class="upload-row"><button id="activate-map" class="primary" disabled>确认切换物理场景</button><span id="scene-switch-status" role="status">正在读取当前物理场景…</span></div>
+<div class="progress-track" id="scene-progress"><div></div></div>
+<hr><h2>上传新的地图骨架</h2><label for="skeleton-name">地图名称（1–40 字）</label><input id="skeleton-name" type="text" maxlength="80" placeholder="例如：实验室双路线" autocomplete="off">
+<div class="upload-row"><input id="skeleton-file" type="file" accept=".json,application/json"><button id="upload-skeleton" class="primary">上传、命名并保存</button></div>
+<p id="import-result" role="status">选择地图查看骨架；上传保存不会自动切换。</p><canvas id="import-map" aria-label="所选骨架的静态预览，不是实时机器人地图" hidden></canvas><details><summary>解析与校验数据</summary><pre id="import-data"></pre></details></dialog>
+<dialog id="evidence-dialog"><div class="dialog-head"><h2>本次会话 · 真实事件与报告</h2><button id="close-evidence">关闭</button></div><p id="evidence-id"></p><pre id="evidence-report"></pre><div id="evidence-events"></div></dialog>
+</body></html>

@@ -1,0 +1,62 @@
+{
+  "source": "map_prior",
+  "doors": [
+    {
+      "id": "D_A_Tree",
+      "at": [
+        4.1,
+        0.5
+      ],
+      "connects": [
+        "A_Tree",
+        "A_Site"
+      ],
+      "interaction_pose": {
+        "x": 4.1,
+        "y": -0.4,
+        "yaw": 1.57
+      },
+      "mechanism": "hinge",
+      "nominal_orientation": 1.57,
+      "runtime_state": "UNKNOWN"
+    },
+    {
+      "id": "D_A_MainTree",
+      "at": [
+        3.0,
+        -6.2
+      ],
+      "connects": [
+        "A_Main",
+        "A_Tree"
+      ],
+      "interaction_pose": {
+        "x": 2.2,
+        "y": -6.2,
+        "yaw": 0
+      },
+      "mechanism": "hinge",
+      "nominal_orientation": 1.57,
+      "runtime_state": "UNKNOWN"
+    },
+    {
+      "id": "D_A_Link",
+      "at": [
+        8.0,
+        2.5
+      ],
+      "connects": [
+        "A_Link",
+        "A_Site"
+      ],
+      "interaction_pose": {
+        "x": 9.25,
+        "y": 2.5,
+        "yaw": 3.14
+      },
+      "mechanism": "revolving",
+      "nominal_orientation": 1.57,
+      "runtime_state": "UNKNOWN"
+    }
+  ]
+}

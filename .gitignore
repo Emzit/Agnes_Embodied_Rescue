@@ -1,0 +1,50 @@
+# Authentication, private runtime state, logs and local machine homes
+/.github-cli/
+/.agh-home*/
+/.codex*/
+/.final-rescue-home/
+/.phase*-home/
+/.runtime*/
+/.runtime-home*/
+/profiles/
+/data/
+/artifacts/
+/backups/
+/log/
+/logs/
+/cache/
+/.cache/
+/.tmp/
+/.corepack/
+/.pnpm-home/
+/.pnpm-store/
+/.conda-envs/
+/.conda-pkgs/
+
+# Installed toolchains and dependency/build outputs
+/tools/
+**/node_modules/
+**/__pycache__/
+*.py[cod]
+/runtime/ros2-jazzy/.pixi/
+/runtime/ros2-jazzy/packages/
+/runtime/ros2-jazzy/overlays/
+/runtime/motion-control.lock
+*.pid
+*.sock
+.env
+.env.*
+!.env.example
+*.local
+
+# Generated mission mailboxes, render probes and native build outputs
+/runtime/motion-stop/
+/runtime/navigation/
+/simulation/visual_assets/fire_checks/
+/simulation/visual_assets/volumetric_fire/build/
+/simulation/visual_assets/volumetric_fire/probe/*
+!/simulation/visual_assets/volumetric_fire/probe/*.py
+/simulation/visual_assets/volumetric_fire/probe/*-before-debug.py
+*.log
+
+# Source, textures, meshes and probe scripts remain versioned.

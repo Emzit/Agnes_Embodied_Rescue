@@ -1,0 +1,12 @@
+<!-- Official Nav2 actions. A sensed path conflict returns to the managed
+     Agent for its world update and next navigation decision. -->
+<root BTCPP_format="4" main_tree_to_execute="MainTree">
+  <BehaviorTree ID="MainTree">
+    <Sequence>
+      <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"
+                         error_code_id="{compute_path_error_code}"/>
+      <FollowPath path="{path}" controller_id="FollowPath"
+                  error_code_id="{follow_path_error_code}"/>
+    </Sequence>
+  </BehaviorTree>
+</root>

@@ -1,0 +1,13 @@
+{
+  "name": "@local/embodied-rescue-robot-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.25.2",
+    "zod": "4.5.4"
+  },
+  "scripts": {
+    "start": "node src/server.ts"
+  }
+}

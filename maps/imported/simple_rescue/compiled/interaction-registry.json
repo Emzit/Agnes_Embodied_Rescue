@@ -1,0 +1,62 @@
+{
+  "source": "map_prior",
+  "doors": [
+    {
+      "id": "D_main",
+      "at": [
+        6.2,
+        1.05
+      ],
+      "connects": [
+        "Main_Corridor",
+        "Room_B"
+      ],
+      "interaction_pose": {
+        "x": 5.8,
+        "y": 1.05,
+        "yaw": 0
+      },
+      "mechanism": "hinge",
+      "nominal_orientation": 1.5708,
+      "runtime_state": "UNKNOWN"
+    },
+    {
+      "id": "D_side",
+      "at": [
+        6.2,
+        -4.0
+      ],
+      "connects": [
+        "Side_Corridor",
+        "Room_B"
+      ],
+      "interaction_pose": {
+        "x": 5.8,
+        "y": -4.0,
+        "yaw": 0
+      },
+      "mechanism": "hinge",
+      "nominal_orientation": 1.5708,
+      "runtime_state": "UNKNOWN"
+    },
+    {
+      "id": "D_c_entry",
+      "at": [
+        2.0,
+        -2.1
+      ],
+      "connects": [
+        "Room_C",
+        "Start"
+      ],
+      "interaction_pose": {
+        "x": 2.0,
+        "y": -1.3,
+        "yaw": -1.57
+      },
+      "mechanism": "hinge",
+      "nominal_orientation": 0,
+      "runtime_state": "UNKNOWN"
+    }
+  ]
+}

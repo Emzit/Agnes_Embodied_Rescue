@@ -1,0 +1,14 @@
+{
+  "name": "agnes-embodied-rescue-workspace",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.34.5",
+  "engines": {
+    "node": ">=24.10"
+  },
+  "scripts": {
+    "test:step2": "node --test packages/embodied-rescue-plugin/tests/*.test.ts",
+    "test:step3": "node --test services/robot-mcp/tests/*.test.ts",
+    "test": "pnpm run test:step2 && pnpm run test:step3"
+  }
+}

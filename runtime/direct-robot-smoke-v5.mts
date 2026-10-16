@@ -1,0 +1,10 @@
+import { Client } from '../third_party/agnes-harness/node_modules/.pnpm/@modelcontextprotocol+sdk@1.25.2_hono@4.13.7_zod@4.5.4/node_modules/@modelcontextprotocol/sdk/dist/esm/client/index.js';
+import { StdioClientTransport } from '../third_party/agnes-harness/node_modules/.pnpm/@modelcontextprotocol+sdk@1.25.2_hono@4.13.7_zod@4.5.4/node_modules/@modelcontextprotocol/sdk/dist/esm/client/stdio.js';
+const root='/data-ssd/zhongchengkai/agnes';
+const transport=new StdioClientTransport({command:`${root}/tools/node/bin/node`,args:[`${root}/scripts/final-rescue/mcp-launch.mjs`],stderr:'pipe'});
+const c=new Client({name:'v5-direct-smoke',version:'1'},{capabilities:{}});
+await c.connect(transport);
+const list=await c.listTools();
+const state=await c.callTool({name:'get_robot_state',arguments:{}});
+console.log(JSON.stringify({tool_count:list.tools.length,tools:list.tools.map(x=>x.name),state}));
+await c.close();

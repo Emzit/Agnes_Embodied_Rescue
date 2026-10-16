@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "metadata": {"id":"lotus_a_greybox","name":"Lotus A-side inspired original greybox","asset_license":"project-authored-greybox","reference_note":"topology reference only; no game assets"},
+  "coordinate_frame":"map",
+  "boundary":{"min_x":-3,"max_x":15,"min_y":-10,"max_y":8},
+  "walls":[
+    {"id":"site_north","a":[-2,5.5],"b":[8,5.5],"thickness":0.2,"height":2.5},
+    {"id":"site_south","a":[-2,0.5],"b":[8,0.5],"thickness":0.2,"height":2.5},
+    {"id":"main_west","a":[-2,0.5],"b":[-2,-8],"thickness":0.2,"height":2.5},
+    {"id":"link_east","a":[8,0.5],"b":[8,-8],"thickness":0.2,"height":2.5},
+    {"id":"tree_split","a":[3,-8],"b":[3,0.5],"thickness":0.2,"height":2.5}
+  ],
+  "rooms":[
+    {"id":"A_Site","name":"A Site","type":"room","bounds":{"min_x":3,"max_x":7.2,"min_y":1.1,"max_y":4.8},"connectors":["A_Main","A_Tree","A_Link"]},
+    {"id":"A_Main","name":"A Main","type":"corridor","bounds":{"min_x":-1.5,"max_x":2.5,"min_y":-7.4,"max_y":-5.1},"connectors":["Start","A_Site","A_Tree","A_Link"]},
+    {"id":"A_Tree","name":"A Tree","type":"corridor","bounds":{"min_x":3.5,"max_x":6.5,"min_y":-7.4,"max_y":-1.0},"connectors":["A_Main","A_Site","A_Link"]},
+    {"id":"A_Link","name":"A Link","type":"corridor","bounds":{"min_x":8.5,"max_x":12.5,"min_y":-7.4,"max_y":-1.0},"connectors":["A_Tree","A_Site","A_Main"]}
+  ],
+  "doors":[
+    {"id":"D_A_Tree","at":[4.1,0.5],"width":1.2,"orientation":1.57,"connects":["A_Tree","A_Site"],"mechanism":"hinge","interaction_pose":{"x":4.1,"y":-0.4,"yaw":1.57}},
+    {"id":"D_A_MainTree","at":[3.0,-6.2],"width":1.2,"orientation":1.57,"connects":["A_Main","A_Tree"],"mechanism":"hinge","interaction_pose":{"x":2.2,"y":-6.2,"yaw":0}},
+    {"id":"D_A_Link","at":[8.0,2.5],"width":1.2,"orientation":1.57,"connects":["A_Link","A_Site"],"mechanism":"revolving","interaction_pose":{"x":8.3,"y":2.5,"yaw":3.14}}
+  ],
+  "connectors":[],
+  "start_poses":[{"id":"Start","name":"Start","x":0,"y":-6.2,"yaw":0,"semantic_location":"A_Main","connectors":["A_Main"]}],
+  "semantic_names":{"Start":"Start","A Site":"A_Site","A Main":"A_Main","A Tree":"A_Tree","A Link":"A_Link"},
+  "optional_navigation_constraints":{"resolution":0.1,"robot_radius_m":0.38,"inflation_m":0.12}
+}

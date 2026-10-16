@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "source_kind": "screen-recording",
+  "source": "artifacts/demo-video-20261013/raw/demo.webm",
+  "source_sha256": "REPLACE_WITH_SHA256_OF_REVIEWED_SOURCE",
+  "review": {
+    "verified": false,
+    "reviewer": "",
+    "reviewed_at": "",
+    "notes": "逐段查看真实录像后填写；以下时间仅为300秒版式示例，必须换成实际来源时间。"
+  },
+  "target_duration": 300,
+  "tolerance_seconds": 15,
+  "ending": {
+    "result": "search_incomplete",
+    "evidence": []
+  },
+  "segments": [
+    {
+      "id": "opening",
+      "start": 0,
+      "end": 20,
+      "speed": 1,
+      "kind": "overview",
+      "caption": "室内火灾人员搜寻演示\n预设路线由 Agnes Harness 实时执行",
+      "evidence": []
+    },
+    {
+      "id": "start_scan",
+      "start": 20,
+      "end": 50,
+      "speed": 1,
+      "kind": "action",
+      "caption": "起点环视 · 通过相机观察周围环境",
+      "evidence": []
+    },
+    {
+      "id": "near_room",
+      "start": 50,
+      "end": 110,
+      "speed": 1,
+      "kind": "action",
+      "caption": "右后小室 · 接近、识门、开门与观察",
+      "evidence": []
+    },
+    {
+      "id": "center_scan",
+      "start": 110,
+      "end": 145,
+      "speed": 1,
+      "kind": "action",
+      "caption": "地图中段 · 环视与继续搜寻",
+      "evidence": []
+    },
+    {
+      "id": "middle_room",
+      "start": 145,
+      "end": 205,
+      "speed": 1,
+      "kind": "action",
+      "caption": "右中小室 · 开门与视觉复查",
+      "evidence": []
+    },
+    {
+      "id": "front_room",
+      "start": 205,
+      "end": 265,
+      "speed": 1,
+      "kind": "action",
+      "caption": "右前小室 · 开门、进入与观察",
+      "evidence": []
+    },
+    {
+      "id": "confirmation",
+      "start": 265,
+      "end": 300,
+      "speed": 1,
+      "kind": "action",
+      "caption": "人员目标复核 · 观察结果与停止状态以执行记录为准",
+      "evidence": []
+    }
+  ]
+}

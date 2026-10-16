@@ -1,0 +1,511 @@
+import type { ModelSettings, UIPendingInput, UsageView } from '@agnes/protocol'
+import { ModelSettingsDialog } from '@agnes/web-ui'
+import {
+  type ComponentType,
+  createElement,
+  type FormEvent,
+  type ForwardedRef,
+  forwardRef,
+  type KeyboardEvent,
+  type ReactNode,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
+import { flushSync } from 'react-dom'
+import type { Translate } from './locales/index.js'
+
+export type ModelPickerOption = {
+  id: string
+  route: string
+  label?: string
+  /** 模型声明的「档位 → provider 取值」映射；缺省表示任意合法档位都接受。 */
+  thinkingLevelMap?: Record<string, string>
+}
+export type ModelPickerState = {
+  accessibleName: string
+  disabled: boolean
+  label: string
+  options: readonly ModelPickerOption[]
+  pending: boolean
+  selected?: ModelPickerOption
+}
+export type ModelPicker = {
+  destroy(): void
+  render(state: ModelPickerState): void
+}
+export type PermissionMode = 'view' | 'workspace' | 'full'
+export type PermissionPickerState = { disabled: boolean; pending: boolean; selected: PermissionMode | null }
+export type PermissionPicker = {
+  destroy(): void
+  render(state: PermissionPickerState): void
+}
+
+/** DOM helpers remain host adapters so this package has no dependency on the Web application. */
+export interface ComposerDependencies {
+  /** Locale-bound translate (host injects `LocaleService#t`); called during render, never cached. */
+  translate: Translate
+  createModelPicker(options: {
+    trigger: HTMLButtonElement
+    onError(error: unknown): void
+    onSelect(option: ModelPickerOption): Promise<boolean>
+  }): ModelPicker
+  createPermissionPicker(options: {
+    trigger: HTMLButtonElement
+    onError(error: unknown): void
+    onSelect(mode: PermissionMode): Promise<boolean>
+  }): PermissionPicker
+  createUsagePanel(
+    parent: HTMLElement,
+    t?: Translate,
+  ): ((usage: UsageView | undefined, connected: boolean) => void) & {
+    dispose?(): void
+  }
+  /** Component injection keeps production usage in the composer root; factories remain compatible. */
+  UsagePanel?: ComponentType<{ usage: UsageView | undefined; connected: boolean; t?: Translate }>
+  isSubmitShortcut(event: {
+    key: string
+    shiftKey: boolean
+    isComposing: boolean
+    keyCode: number
+    metaKey: boolean
+    ctrlKey: boolean
+  }): boolean
+  resize(textarea: HTMLTextAreaElement): void
+}
+
+export interface ComposerView {
+  cancel: { disabled: boolean; hidden: boolean; label: string }
+  connected: boolean
+  configured: boolean
+  hasSession: boolean
+  hint: { kind: 'shortcut' | 'state'; text: string }
+  input: { disabled: boolean; placeholder: string }
+  loading: boolean
+  model: ModelPickerState
+  modelSettings?: {
+    key: string
+    settings: ModelSettings
+    contextWindow: number
+    thinkingLevelMap?: Record<string, string> | undefined
+  }
+  permission: PermissionPickerState
+  queue?: { items: readonly UIPendingInput[]; disabled: boolean; sending?: string; error?: string }
+  sending: boolean
+  send: { disabled: boolean; label: string; mode: 'idle' | 'busy' | 'pending'; title: string }
+  stopping: boolean
+  usage: UsageView | undefined
+  workspace: { disabled: boolean; label: string; title: string }
+}
+
+export interface ComposerHandle {
+  focus(): void
+  getDraft(): string
+  render(view: ComposerView): void
+  resize(): void
+  setDraft(value: string): void
+}
+
+export interface ComposerRegionOptions {
+  initialDraft?: string
+  onCancel(): void
+  onDraftChange(value: string): void
+  onError(error: unknown): void
+  onModelSelect(option: ModelPickerOption): Promise<boolean>
+  onModelSettingsChange?(settings: ModelSettings): Promise<boolean>
+  onPermissionSelect(mode: PermissionMode): Promise<boolean>
+  onSubmit(): void
+  onSendNow?(itemId: string): void
+  onWorkspace(): void
+}
+
+export interface ComposerSlots {
+  attachments?: ReactNode
+  dock?: ReactNode
+  left?: ReactNode
+  model?: ReactNode
+  overlay?: ReactNode
+  permission?: ReactNode
+  plan?: ReactNode
+  right?: ReactNode
+}
+
+const INITIAL_VIEW: ComposerView = {
+  cancel: { disabled: true, hidden: true, label: 'Stop' },
+  connected: false,
+  configured: false,
+  hasSession: false,
+  hint: { kind: 'state', text: 'Connect to the backend to start' },
+  input: { disabled: true, placeholder: 'Describe what you want to do…' },
+  loading: false,
+  model: {
+    accessibleName: 'Select the model for this session',
+    disabled: true,
+    label: 'Select model',
+    options: [],
+    pending: false,
+  },
+  permission: { disabled: true, pending: false, selected: 'workspace' },
+  sending: false,
+  send: { disabled: true, label: 'Send', mode: 'idle', title: 'Send (Enter)' },
+  stopping: false,
+  usage: undefined,
+  workspace: { disabled: true, label: 'Select workspace', title: 'Select workspace' },
+}
+
+interface ComposerProps extends ComposerRegionOptions {
+  initialView?: ComposerView
+  dependencies: ComposerDependencies
+  slots?: ComposerSlots
+}
+
+export const Composer = forwardRef<ComposerHandle, ComposerProps>(function Composer(
+  {
+    initialDraft = '',
+    initialView = INITIAL_VIEW,
+    dependencies,
+    onCancel,
+    onDraftChange,
+    onError,
+    onModelSelect,
+    onModelSettingsChange,
+    onPermissionSelect,
+    onSubmit,
+    onSendNow,
+    onWorkspace,
+    slots,
+  }: ComposerProps,
+  ref: ForwardedRef<ComposerHandle>,
+) {
+  const [view, setView] = useState<ComposerView>(initialView)
+  const form = useRef<HTMLFormElement>(null)
+  const prompt = useRef<HTMLTextAreaElement>(null)
+  const model = useRef<HTMLButtonElement>(null)
+  const permission = useRef<HTMLButtonElement>(null)
+  const usage = useRef<HTMLElement>(null)
+  const modelPicker = useRef<ModelPicker>()
+  const permissionPicker = useRef<PermissionPicker>()
+  const renderUsage = useRef<ReturnType<ComposerDependencies['createUsagePanel']>>()
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus() {
+        prompt.current?.focus()
+      },
+      getDraft() {
+        return prompt.current?.value ?? ''
+      },
+      render(next) {
+        flushSync(() => setView(next))
+      },
+      resize() {
+        if (prompt.current) dependencies.resize(prompt.current)
+      },
+      setDraft(value) {
+        if (!prompt.current || prompt.current.value === value) return
+        prompt.current.value = value
+        dependencies.resize(prompt.current)
+      },
+    }),
+    [dependencies.resize],
+  )
+
+  useLayoutEffect(() => {
+    if (!model.current || !permission.current || !usage.current) return
+    modelPicker.current = dependencies.createModelPicker({
+      trigger: model.current,
+      onError,
+      onSelect: onModelSelect,
+    })
+    permissionPicker.current = dependencies.createPermissionPicker({
+      trigger: permission.current,
+      onError,
+      onSelect: onPermissionSelect,
+    })
+    if (!dependencies.UsagePanel)
+      renderUsage.current = dependencies.createUsagePanel(usage.current, dependencies.translate)
+    return () => {
+      modelPicker.current?.destroy()
+      permissionPicker.current?.destroy()
+      modelPicker.current = undefined
+      permissionPicker.current = undefined
+      renderUsage.current?.dispose?.()
+      renderUsage.current = undefined
+    }
+  }, [dependencies, onError, onModelSelect, onPermissionSelect])
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the preceding effect replaces handles when these inputs change.
+  useLayoutEffect(() => {
+    modelPicker.current?.render(view.model)
+    permissionPicker.current?.render(view.permission)
+    renderUsage.current?.(view.usage, view.connected)
+  }, [view, dependencies, onError, onModelSelect, onPermissionSelect])
+
+  return createElement(
+    'form',
+    {
+      ref: form,
+      id: 'composer',
+      'data-agnes-region': 'composer',
+      'data-agnes-region-owner': 'builtin',
+      'data-agnes-region-unit': 'composer',
+      onSubmit: (event: SubmitEvent) => {
+        event.preventDefault()
+        onSubmit()
+      },
+    },
+    slots?.overlay,
+    view.queue && (view.queue.items.length > 0 || view.queue.error)
+      ? createElement(
+          'section',
+          { className: 'composer-queue', 'aria-label': dependencies.translate('composer.queue.label') },
+          createElement(
+            'p',
+            { className: 'composer-queue-count', 'aria-live': 'polite' },
+            dependencies.translate('composer.queue.count', { count: view.queue.items.length }),
+          ),
+          createElement(
+            'ol',
+            null,
+            view.queue.items.map((item, index) =>
+              createElement(
+                'li',
+                { key: item.itemId, 'data-queue-item': item.itemId },
+                createElement(
+                  'div',
+                  { className: 'composer-queue-row' },
+                  createElement(
+                    'span',
+                    { className: 'composer-queue-preview', title: item.preview },
+                    item.preview || dependencies.translate('composer.queue.attachment'),
+                  ),
+                  createElement(
+                    'button',
+                    {
+                      type: 'button',
+                      disabled: view.queue?.disabled || !onSendNow,
+                      'aria-label': dependencies.translate('composer.queue.sendAccessible', {
+                        index: index + 1,
+                      }),
+                      title: dependencies.translate('composer.queue.sendTitle'),
+                      'aria-busy': view.queue?.sending === item.itemId,
+                      onClick: () => {
+                        onSendNow?.(item.itemId)
+                        prompt.current?.focus()
+                      },
+                    },
+                    dependencies.translate(
+                      view.queue?.sending === item.itemId ? 'composer.queue.sending' : 'composer.queue.send',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          view.queue.error
+            ? createElement('p', { className: 'composer-queue-error', role: 'alert' }, view.queue.error)
+            : null,
+        )
+      : null,
+    createElement(
+      'div',
+      { className: 'composer-writing' },
+      createElement(
+        'label',
+        { className: 'visually-hidden', htmlFor: 'prompt' },
+        dependencies.translate('composer.input.label'),
+      ),
+      createElement('textarea', {
+        ref: prompt,
+        id: 'prompt',
+        'data-agnes-region': 'composer-input',
+        rows: 1,
+        'aria-describedby': 'composer-hint',
+        disabled: view.input.disabled,
+        placeholder: view.input.placeholder,
+        defaultValue: initialDraft,
+        onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => {
+          if (
+            !dependencies.isSubmitShortcut({
+              key: event.key,
+              shiftKey: event.shiftKey,
+              isComposing: event.nativeEvent.isComposing,
+              keyCode: event.keyCode,
+              metaKey: event.metaKey,
+              ctrlKey: event.ctrlKey,
+            })
+          )
+            return
+          event.preventDefault()
+          form.current?.requestSubmit()
+        },
+        onInput: (event: FormEvent<HTMLTextAreaElement>) => onDraftChange(event.currentTarget.value),
+      }),
+      createElement('p', { id: 'composer-hint', 'data-kind': view.hint.kind }, view.hint.text),
+      slots?.attachments,
+    ),
+    createElement(
+      'div',
+      { className: 'composer-controls' },
+      slots?.left,
+      createElement(
+        'button',
+        {
+          id: 'composer-workspace',
+          className: 'composer-workspace',
+          type: 'button',
+          'aria-haspopup': 'dialog',
+          title: view.workspace.title,
+          disabled: view.workspace.disabled,
+          onClick: onWorkspace,
+        },
+        createElement(
+          'svg',
+          {
+            className: 'icon icon-folder',
+            'data-agnes-region': 'icon',
+            viewBox: '0 0 16 16',
+            'aria-hidden': true,
+          },
+          createElement('path', {
+            d: 'M5.37012 2.8418C5.52719 2.84178 5.68146 2.88387 5.81641 2.96289C5.95148 3.04201 6.06232 3.15581 6.13672 3.29199L6.74414 4.40137H12.7383C13.2166 4.40139 13.6084 4.78249 13.6084 5.25391V12.6631C13.6082 13.1343 13.2165 13.5146 12.7383 13.5146H2.7627C2.28458 13.5146 1.89277 13.1343 1.89258 12.6631V3.69434C1.89258 3.22297 2.28447 2.84189 2.7627 2.8418H5.37012ZM2.83496 11.4932V12.5908H12.667V11.5645H12.666V8.00488L2.84961 7.99121L2.83496 11.4932ZM2.83496 7.06738H12.666V5.32617H6.18066L6.16016 5.28809L5.32715 3.76562H2.83496V7.06738Z',
+          }),
+        ),
+        createElement('span', { 'data-workspace-label': true }, view.workspace.label),
+        createElement(
+          'svg',
+          {
+            className: 'icon model-chevron',
+            'data-agnes-region': 'icon',
+            viewBox: '0 0 24 24',
+            'aria-hidden': true,
+          },
+          createElement('path', { d: 'm6 9 6 6 6-6' }),
+        ),
+      ),
+      slots?.permission,
+      createElement(
+        'button',
+        {
+          ref: permission,
+          id: 'composer-permission',
+          className: 'composer-permission',
+          type: 'button',
+          'aria-haspopup': 'listbox',
+          'aria-expanded': false,
+          'aria-label': dependencies.translate('composer.permission.accessible'),
+          title: dependencies.translate('composer.permission.workspace'),
+          disabled: view.permission.disabled,
+        },
+        createElement(
+          'svg',
+          { className: 'icon', 'data-agnes-region': 'icon', viewBox: '0 0 24 24', 'aria-hidden': true },
+          createElement('path', {
+            d: 'M12 3 5 6.5v5.2c0 4.4 2.9 8.4 7 9.8 4.1-1.4 7-5.4 7-9.8V6.5L12 3zm0 2.1 5 2.5v4.1c0 3.4-2.2 6.5-5 7.7-2.8-1.2-5-4.3-5-7.7V7.6l5-2.5z',
+          }),
+        ),
+        createElement(
+          'span',
+          { 'data-permission-label': true },
+          dependencies.translate('composer.permission.workspace'),
+        ),
+        createElement(
+          'svg',
+          {
+            className: 'icon model-chevron',
+            'data-agnes-region': 'icon',
+            viewBox: '0 0 24 24',
+            'aria-hidden': true,
+          },
+          createElement('path', { d: 'm6 9 6 6 6-6' }),
+        ),
+      ),
+      slots?.model,
+      slots?.right,
+      slots?.plan,
+      createElement(
+        'div',
+        { className: 'model-field' },
+        createElement(
+          'button',
+          {
+            ref: model,
+            id: 'model',
+            type: 'button',
+            'aria-haspopup': 'listbox',
+            'aria-expanded': false,
+            'aria-label': view.model.accessibleName,
+          },
+          createElement('span', { 'data-model-label': true }, view.model.label),
+          createElement(
+            'svg',
+            {
+              className: 'icon model-chevron',
+              'data-agnes-region': 'icon',
+              viewBox: '0 0 24 24',
+              'aria-hidden': true,
+            },
+            createElement('path', { d: 'm6 9 6 6 6-6' }),
+          ),
+        ),
+      ),
+      view.modelSettings && onModelSettingsChange
+        ? createElement(ModelSettingsDialog, {
+            ...view.modelSettings,
+            disabled: view.model.disabled || view.model.pending,
+            onApply: onModelSettingsChange,
+            t: dependencies.translate,
+          })
+        : undefined,
+      createElement(
+        'section',
+        {
+          ref: usage,
+          id: 'session-usage',
+          'aria-label': dependencies.translate('composer.usage.label'),
+          hidden: dependencies.UsagePanel ? !view.usage : true,
+        },
+        dependencies.UsagePanel
+          ? createElement(dependencies.UsagePanel, {
+              usage: view.usage,
+              connected: view.connected,
+              t: dependencies.translate,
+            })
+          : undefined,
+      ),
+      createElement(
+        'button',
+        {
+          id: 'cancel',
+          className: 'secondary-button compact',
+          type: 'button',
+          hidden: view.cancel.hidden,
+          disabled: view.cancel.disabled,
+          onClick: onCancel,
+        },
+        view.cancel.label,
+      ),
+      createElement(
+        'button',
+        {
+          id: 'send',
+          className: 'primary-button',
+          type: 'submit',
+          disabled: view.send.disabled,
+          'data-mode': view.send.mode,
+          'aria-label': view.send.label,
+          title: view.send.title,
+        },
+        createElement('span', null, view.send.label),
+        createElement(
+          'svg',
+          { className: 'icon', 'data-agnes-region': 'icon', viewBox: '0 0 24 24', 'aria-hidden': true },
+          createElement('path', { d: 'M12 19V5M6.5 10.5 12 5l5.5 5.5' }),
+        ),
+      ),
+      slots?.dock,
+    ),
+  )
+})

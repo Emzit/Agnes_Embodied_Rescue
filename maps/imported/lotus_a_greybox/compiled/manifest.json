@@ -1,0 +1,16 @@
+{
+  "source_skeleton": "map_skeleton.json",
+  "generated_files": [
+    "world.sdf",
+    "map.pgm",
+    "map.yaml",
+    "bridge.yaml",
+    "world_registry.json",
+    "dashboard-geometry.json",
+    "interaction-registry.json",
+    "nav2_params.yaml"
+  ],
+  "source_sha256": "e684329b471f619b676173c7ce016184e14fda2cf320b1bd5754b0e310697d09",
+  "map_prior_only": true,
+  "runtime_robot_model": "project-authored imported_rescue_robot with real odom/camera/lidar"
+}

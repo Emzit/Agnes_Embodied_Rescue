@@ -1,0 +1,63 @@
+{
+  "source": "Project-authored geometry and deterministic procedural textures",
+  "reference": "User-supplied office walkthrough; no video frames used as texture assets",
+  "third_party_assets": [],
+  "generator": "simulation/visual_assets/office_generate.py",
+  "seed": 20261012,
+  "resolution": [
+    512,
+    512
+  ],
+  "files": [
+    {
+      "path": "simulation/visual_assets/office_textures/carpet_albedo.png",
+      "sha256": "c54531e00b4b4ddd6ce0b09803129ae713f2b09d0be61b3704a5c15191c45902",
+      "bytes": 255599
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/carpet_normal.png",
+      "sha256": "83560aca49227d4732bf0bf92765cf22903cc38dd34d071499d7100a55e568af",
+      "bytes": 243921
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/carpet_roughness.png",
+      "sha256": "e699dc912096f574a08d18060c16c0d890d139c1fbe072641e001412eba34bd8",
+      "bytes": 1875
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/ceiling_albedo.png",
+      "sha256": "dbe18fcdf8b3825a25c0d71e1fead5b804cb49d27a1b5c395b9e2347efb7e0d9",
+      "bytes": 139853
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/ceiling_normal.png",
+      "sha256": "5af5bd67402915e169de9fb3ea370b9fe3a5079162593ba1db316408ec92aa99",
+      "bytes": 285303
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/ceiling_roughness.png",
+      "sha256": "c645f270e6bab0a2082200367559066aa6009e73bf001fb3a02f4d927a4c2341",
+      "bytes": 1876
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/plaster_albedo.png",
+      "sha256": "16bba55412aece37fe89b6dca2c1ee8366f8db22731e6243a14e988c4ff392e6",
+      "bytes": 182698
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/plaster_normal.png",
+      "sha256": "ddffe5a3d50be6480880713fdbbe7e87e0985260dc0fde4ac13b786ce3b32bda",
+      "bytes": 116394
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/plaster_roughness.png",
+      "sha256": "9827f31de296407a9c647a062078695f2ebc75c5b8863f1523c612b2f35ee7cf",
+      "bytes": 1876
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/screen.png",
+      "sha256": "31da264386f9ec5e7538739405a5a2df4089511240f9570dde09080270e289e0",
+      "bytes": 3022
+    }
+  ]
+}

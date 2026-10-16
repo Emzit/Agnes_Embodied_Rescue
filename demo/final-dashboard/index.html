@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>具身智能实验室救援 Demo</title>
+  <link rel="stylesheet" href="/styles.css?v=3">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">✦</span><div><div class="eyebrow">EMBODIED RESCUE / FINAL RESCUE</div><h1>具身智能实验室救援 Demo</h1></div></div>
+    <div class="mission"><span>任务</span><strong>进入实验室寻找失联研究员，并报告环境风险。</strong></div>
+    <div class="header-controls"><div class="mode-switch"><button data-mode="control" class="mode-button active">CONTROL</button><button data-mode="live" class="mode-button">LIVE</button><button data-mode="replay" class="mode-button">REPLAY</button><button data-mode="system" class="mode-button">SYSTEM</button></div><span id="run-id" class="run-chip">LIVE READY</span><span id="overall" class="status-pill pass">READY</span></div>
+  </header>
+
+  <main class="shell">
+    <section class="mode-notice" id="mode-notice">LIVE / REAL EXECUTION · Camera 为 Gazebo 真实 sensor，机器人状态来自实时 ROS2。</section>
+    <section class="control-console" id="control-console"><div class="control-input"><span class="section-kicker">NATURAL LANGUAGE MISSION</span><textarea id="mission-input" maxlength="2000">进入实验室寻找失联研究员，并报告环境风险。</textarea></div><div class="control-actions"><button id="mission-start" class="primary-action">开始执行</button><button id="mission-stop" class="danger-action">停止任务</button><button id="scene-reset">重置演示场景</button><button id="mission-clear">清空</button><b id="mission-status">IDLE</b></div></section>
+    <section class="scenario-console" id="scenario-console"><span class="section-kicker">BUILDING SKELETON</span><span>Scenario Seed: <b id="scenario-seed">—</b></span><span>Layout: <b id="scenario-layout">—</b></span><input id="scenario-seed-input" inputmode="numeric" placeholder="可选 seed"><button id="scenario-generate">🎲 生成新场景</button><input id="map-import-file" type="file" accept="application/json,.json"><button id="map-import">上传并预览骨架</button><button id="map-activate" disabled>显式激活物理场景</button><button id="scenario-reveal" disabled>Reveal Ground Truth</button><span id="scenario-status" class="muted">地图先验预览不会重置当前 Demo；激活需单独点击。</span><pre id="map-import-preview" class="map-import-preview" aria-live="polite"></pre></section>
+    <section class="command-bar">
+      <div><span class="section-kicker">LIVE MISSION STORY</span><div id="hero-stage">当前：等待回放</div><small id="hero-sub">事件、地图、感知和报告来自同一份真实运行证据。</small></div>
+      <div class="hero-location"><span>当前位置</span><strong id="hero-location">Start</strong><small id="hero-route-state">路线：OPEN</small></div>
+      <div class="hero-progress"><div class="progress-track"><i id="hero-progress-bar"></i></div><span id="hero-progress-label">0 / 12</span></div>
+      <div class="playback"><select id="run-select"><option value="showcase-v2">Showcase V2 · 展示专用真实运行</option><option value="showcase">Showcase · 历史真实运行</option><option value="1">Run1</option><option value="2">Run2</option><option value="3">Run3</option></select><button id="restart">↺</button><button id="play" class="play-button">▶ Play</button><button id="pause">Ⅱ</button><select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select><span id="playback-state">已加载全部轨迹</span></div>
+    </section>
+
+    <section class="stack-strip" id="stack-grid"></section>
+
+    <div class="dashboard-grid">
+      <section class="panel map-panel">
+        <div class="panel-title"><div><span class="section-kicker">WORLD MODEL / 3D</span><h2>实验室空间地图</h2></div><div class="map-actions"><button id="top-view">俯视</button><button id="orbit-view" class="selected">3D</button><button id="follow-robot">跟随机器人</button></div></div>
+        <div class="map-wrap"><canvas id="map3d" aria-label="基于真实 registry 和 route evidence 的 3D 展示地图"></canvas><div class="map-overlay"><b id="map-phase">当前：等待回放</b><span id="map-location">当前位置：Start</span><span id="map-path-state" class="open">CORRIDOR_A · OPEN</span></div><div class="map-legend"><span><i class="legend-swatch blue"></i>planned route</span><span><i class="legend-swatch cyan"></i>traversed</span><span><i class="legend-swatch green"></i>alternative</span><span><i class="legend-swatch red"></i>blocked</span><span><i class="legend-swatch orange"></i>cabinet</span></div></div><div class="map-caption"><span>真实来源：world registry + Nav2 alignment + pose/route evidence</span><span>展示层对真实 Gazebo/odom 采样做时间插值</span></div><div class="map-disclaimer">3D 地图是基于真实 world registry、robot pose 和 route evidence 的展示层重建，不是 Gazebo 原生 3D renderer。</div></section>
+
+      <aside class="right-column">
+        <section class="panel camera-panel"><div class="panel-title"><div><span class="section-kicker">RGB / CAMERA</span><h2>最近真实画面</h2></div><span id="camera-evidence" class="evidence-tag">REAL GAZEBO CAMERA</span></div><div id="camera-card" class="camera-card"></div><div id="camera-live-meta" class="camera-live-meta">等待真实 Camera stream…</div></section>
+        <section class="panel perception-panel"><div class="panel-title"><div><span class="section-kicker">PIXEL PERCEPTION</span><h2>感知与主动复检</h2></div><span class="sensor-chip">LiDAR <b id="lidar-range">—</b></span></div><div id="detection-card" class="detection-card"></div></section>
+      <section class="panel agent-panel"><div class="panel-title"><div><span class="section-kicker">AGENT STATE</span><h2>Agent 当前状态</h2></div><span id="task-state" class="state-tag">COMPLETED</span></div><div id="agent-state" class="metric-grid"></div></section>
+      <section class="panel state-boundary-panel"><div class="panel-title"><div><span class="section-kicker">MAP PRIOR / LIVE WORLD</span><h2>先验与现场证据</h2></div><span class="source-label">UNKNOWN 直到真实观测</span></div><div id="state-boundary" class="state-boundary"></div></section>
+      </aside>
+
+      <section class="panel story-panel"><div class="panel-title"><div><span class="section-kicker">MISSION PROGRESS</span><h2>任务进度</h2></div><span class="muted">真实事件逐步高亮</span></div><div id="stages" class="stage-strip"></div></section>
+      <section class="panel decision-panel"><div class="panel-title"><div><span class="section-kicker">ADAPTIVE DECISION</span><h2>为什么改变决策</h2></div><span id="decision-source" class="source-label">真实导航 / 感知证据</span></div><div id="decision-story" class="decision-story"></div></section>
+      <section class="panel timeline-panel"><div class="panel-title"><div><span class="section-kicker">TRACE</span><h2>事件时间线</h2></div><span id="timeline-count" class="muted"></span></div><div id="timeline" class="timeline"></div></section>
+      <section class="panel report-panel"><div class="panel-title"><div><span class="section-kicker">MISSION REPORT</span><h2>最终报告</h2></div><span class="source-label">真实 final-report.txt</span></div><pre id="final-report">加载中…</pre></section>
+    </div>
+
+    <footer class="truth"><div class="truth-title">真实性边界</div><div class="truth-grid"><span>LIVE / REAL EXECUTION</span><span>3D 地图：真实坐标的展示层重建</span><span>Camera：Gazebo 真实 sensor /camera/image_raw</span><span>导航：ROS2 Jazzy + Nav2</span><span>仿真：Gazebo Harmonic</span><span>感知：真实 RGB 像素上的 NumPy 颜色/轮廓检测</span><span>Agent：Agnes real LLM</span><span>perception 不是通用视觉模型</span><span>person detection 不等于现实身份认证</span><span>replay 是历史真实运行证据回放</span></div></footer>
+  </main>
+  <script type="module" src="/app.js?v=4"></script>
+</body>
+</html>

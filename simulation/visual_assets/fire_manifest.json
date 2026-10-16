@@ -1,0 +1,60 @@
+{
+  "source": "Project-authored deterministic procedural fire textures",
+  "generator": "simulation/visual_assets/fire_generate.py",
+  "seed": 2026101207,
+  "third_party_assets": [],
+  "models_called": [],
+  "license": "Same license as this project; no external visual asset restrictions",
+  "files": [
+    {
+      "path": "simulation/visual_assets/fire_textures/charcoal.png",
+      "bytes": 81488,
+      "sha256": "5cb0746ddd2c4468fdb85fee5ffce28b9921cf11a8f3baccdb843c534a50c231"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/charcoal_normal.png",
+      "bytes": 140821,
+      "sha256": "f5d69cdc4a7399e37c0c28a17dc9376d9a3e515246a2919944445473bd6441dc"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/embers.png",
+      "bytes": 64683,
+      "sha256": "61d8a0fe9de381e468b92a61987002f6f2a6493fbd008b85e5984d3074a4b47e"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/flame.png",
+      "bytes": 188282,
+      "sha256": "f6812ddc5607d14b36eea5eb357c44b3cff2ee2dccc4b5f09608ef4409c4753d"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/flame_life.png",
+      "bytes": 974,
+      "sha256": "916e5492945b334af8d20b025e951ebb2c2c4e94026f571ca3fd0b26e5db7372"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/smoke.png",
+      "bytes": 414502,
+      "sha256": "9d5c7c1c5d751da94fe7c670d263b583727fffe7fbf11de495807010478c94ad"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/smoke_life.png",
+      "bytes": 976,
+      "sha256": "fe4af0610623038d69a6adf52a26b023756b5d0818243dde9a8be81c04f7224a"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/soot.png",
+      "bytes": 212729,
+      "sha256": "584387192aff8db9357ebfd31ea9d75f373735a122c0f24e5bf6e58e0104f0c4"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/spark.png",
+      "bytes": 26331,
+      "sha256": "3b939e18e849a74f9b9c0d219c46f58213b74d14c7ba272a15d0196f373bab4b"
+    },
+    {
+      "path": "simulation/visual_assets/fire_textures/spark_life.png",
+      "bytes": 1062,
+      "sha256": "38130d2d8832a67e7d95666d588bfa49d1d85b0563091e99d70c3187c7e76440"
+    }
+  ]
+}

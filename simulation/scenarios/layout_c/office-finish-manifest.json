@@ -1,0 +1,147 @@
+{
+  "materials": "Exact shared office plaster/carpet PBR maps",
+  "changed_visuals": [
+    {
+      "model": "ground",
+      "material": "carpet",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/office_carpet.dae"
+    },
+    {
+      "model": "wall_0",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_0.dae"
+    },
+    {
+      "model": "wall_1",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_1.dae"
+    },
+    {
+      "model": "wall_2",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_2.dae"
+    },
+    {
+      "model": "wall_3",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_3.dae"
+    },
+    {
+      "model": "wall_4",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_4.dae"
+    },
+    {
+      "model": "wall_5",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_5.dae"
+    },
+    {
+      "model": "wall_6",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_6.dae"
+    },
+    {
+      "model": "wall_7",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_7.dae"
+    },
+    {
+      "model": "wall_8",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_8.dae"
+    },
+    {
+      "model": "wall_9",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_9.dae"
+    },
+    {
+      "model": "wall_10",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_10.dae"
+    },
+    {
+      "model": "wall_11",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_11.dae"
+    },
+    {
+      "model": "wall_12",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_12.dae"
+    },
+    {
+      "model": "wall_13",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_13.dae"
+    },
+    {
+      "model": "wall_14",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_14.dae"
+    },
+    {
+      "model": "wall_15",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_15.dae"
+    },
+    {
+      "model": "wall_16",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_16.dae"
+    },
+    {
+      "model": "wall_17",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_17.dae"
+    },
+    {
+      "model": "wall_18",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_18.dae"
+    },
+    {
+      "model": "wall_19",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_19.dae"
+    },
+    {
+      "model": "wall_20",
+      "material": "plaster",
+      "mesh": "simulation/scenarios/layout_c/office-finish-meshes/wall_20.dae"
+    }
+  ],
+  "textures": [
+    {
+      "path": "simulation/visual_assets/office_textures/plaster_albedo.png",
+      "sha256": "16bba55412aece37fe89b6dca2c1ee8366f8db22731e6243a14e988c4ff392e6"
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/plaster_normal.png",
+      "sha256": "ddffe5a3d50be6480880713fdbbe7e87e0985260dc0fde4ac13b786ce3b32bda"
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/plaster_roughness.png",
+      "sha256": "9827f31de296407a9c647a062078695f2ebc75c5b8863f1523c612b2f35ee7cf"
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/carpet_albedo.png",
+      "sha256": "c54531e00b4b4ddd6ce0b09803129ae713f2b09d0be61b3704a5c15191c45902"
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/carpet_normal.png",
+      "sha256": "83560aca49227d4732bf0bf92765cf22903cc38dd34d071499d7100a55e568af"
+    },
+    {
+      "path": "simulation/visual_assets/office_textures/carpet_roughness.png",
+      "sha256": "e699dc912096f574a08d18060c16c0d890d139c1fbe072641e001412eba34bd8"
+    }
+  ],
+  "person_materials": "Existing shared person_links()",
+  "collision_changes": false,
+  "navigation_map_changes": false,
+  "geometry_layout_changes": false,
+  "third_party_assets": [],
+  "world_sha256": "255d88f6a0ee853b1aa35b05c3cd3a58dac3564933617cd21294837d2d117d56"
+}

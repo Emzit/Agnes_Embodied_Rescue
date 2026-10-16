@@ -1,0 +1,128 @@
+{
+  "asset_source": "Project-authored deterministic geometry and procedural surface textures",
+  "generator": "simulation/visual_assets/generate_assets.py",
+  "seed": 20261012,
+  "third_party_assets": [],
+  "texture_resolution": [
+    768,
+    768
+  ],
+  "human_identity": "generic schematic adult; no real person scan or likeness",
+  "files": [
+    {
+      "path": "simulation/visual_assets/meshes/sphere.dae",
+      "sha256": "e0de09721f3d210b4f25219fbd91844b8aa271ef6062effcfa520a57442c5625",
+      "bytes": 96179
+    },
+    {
+      "path": "simulation/visual_assets/meshes/torso.dae",
+      "sha256": "1a75800df198dd089ab2d4fe8447a4f5ebf4a63a019a00a66fdb1c00fec86fd0",
+      "bytes": 26446
+    },
+    {
+      "path": "simulation/visual_assets/textures/cloth_albedo.png",
+      "sha256": "6ec188f98a7c0a0e2118be61304a5e9d55a44fa3c438a9a409c08e2ed7447017",
+      "bytes": 255152
+    },
+    {
+      "path": "simulation/visual_assets/textures/cloth_normal.png",
+      "sha256": "709255a5fc73eca155379bfe2aa1cad1bade287e8a7e2a02e60b1bffff875ae4",
+      "bytes": 4926
+    },
+    {
+      "path": "simulation/visual_assets/textures/cloth_roughness.png",
+      "sha256": "432dc72a52bb3fe52e9cdd989d5d80095f42f912706450261c750ed9b41529e0",
+      "bytes": 144887
+    },
+    {
+      "path": "simulation/visual_assets/textures/detail_albedo.png",
+      "sha256": "a900869f469e88edff0e1d8e49e6008bc0679a63b3477a02d5af8c88322abc88",
+      "bytes": 309071
+    },
+    {
+      "path": "simulation/visual_assets/textures/detail_normal.png",
+      "sha256": "d48256c0766898f21d8538207e22510b0038fc83e72092e44d66308d72ff9cb7",
+      "bytes": 439462
+    },
+    {
+      "path": "simulation/visual_assets/textures/detail_roughness.png",
+      "sha256": "b13c7d472bbfe92b8e031730ef757f9ac9da3e111bc0f9981d467994e6404ccd",
+      "bytes": 144545
+    },
+    {
+      "path": "simulation/visual_assets/textures/floor_albedo.png",
+      "sha256": "1fd45283d31a4b217d2c83dd4989d00a689e4740dfd8742a7733c6dfb4152da0",
+      "bytes": 572131
+    },
+    {
+      "path": "simulation/visual_assets/textures/floor_normal.png",
+      "sha256": "47990ccdf62d4b47feae00ee8ce6a0207ded074264dcfad213fb5cae2aea266e",
+      "bytes": 714773
+    },
+    {
+      "path": "simulation/visual_assets/textures/floor_roughness.png",
+      "sha256": "ccc7bac7eef0a56bfbd59f6311900491a5e0967fae30260b17aa3467afbe1e65",
+      "bytes": 208605
+    },
+    {
+      "path": "simulation/visual_assets/textures/leather_albedo.png",
+      "sha256": "631faa8d2e1ca78879c48bfd90c09c2996f18a411ab22e4e679415f052b51593",
+      "bytes": 446393
+    },
+    {
+      "path": "simulation/visual_assets/textures/leather_normal.png",
+      "sha256": "d48256c0766898f21d8538207e22510b0038fc83e72092e44d66308d72ff9cb7",
+      "bytes": 439462
+    },
+    {
+      "path": "simulation/visual_assets/textures/leather_roughness.png",
+      "sha256": "8d2e1fe89c98ec6598f1cce3bf2468faa83bbef5e9c365fe415d57198795e55c",
+      "bytes": 144887
+    },
+    {
+      "path": "simulation/visual_assets/textures/skin_albedo.png",
+      "sha256": "bb3b4ed808371068b2cb03fd5ed9733192f7b4556fa50523f4eb22c8eaa8b918",
+      "bytes": 456085
+    },
+    {
+      "path": "simulation/visual_assets/textures/skin_normal.png",
+      "sha256": "d48256c0766898f21d8538207e22510b0038fc83e72092e44d66308d72ff9cb7",
+      "bytes": 439462
+    },
+    {
+      "path": "simulation/visual_assets/textures/skin_roughness.png",
+      "sha256": "ec05dec7ac3ecc8acdc7e6c60938cc1656bb9890b03818ba215837f1be46c93a",
+      "bytes": 144739
+    },
+    {
+      "path": "simulation/visual_assets/textures/trousers_albedo.png",
+      "sha256": "f497b0f4ea89678d2445a5fa70ac42e0de372b2c6be9811be6f37a90c36bd5fd",
+      "bytes": 229321
+    },
+    {
+      "path": "simulation/visual_assets/textures/trousers_normal.png",
+      "sha256": "709255a5fc73eca155379bfe2aa1cad1bade287e8a7e2a02e60b1bffff875ae4",
+      "bytes": 4926
+    },
+    {
+      "path": "simulation/visual_assets/textures/trousers_roughness.png",
+      "sha256": "463525aa2ba46db696c98a4ab03b0c9633297a65b80dc62f16a617c0b98fa443",
+      "bytes": 145029
+    },
+    {
+      "path": "simulation/visual_assets/textures/wall_albedo.png",
+      "sha256": "1eded9d68264e78eb96ae2df1056b93fb1a0019e8001fddf33149189644e9dd2",
+      "bytes": 694113
+    },
+    {
+      "path": "simulation/visual_assets/textures/wall_normal.png",
+      "sha256": "ef843fed5430a7702445143054cbe8b832bb11fc6b1a54d84cd6238f5c44d103",
+      "bytes": 1014097
+    },
+    {
+      "path": "simulation/visual_assets/textures/wall_roughness.png",
+      "sha256": "64515a84cc4d7d9d8e392c5651142c8e8a17676be9f01326339fc61886d0a276",
+      "bytes": 498022
+    }
+  ]
+}

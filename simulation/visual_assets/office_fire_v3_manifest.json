@@ -1,0 +1,71 @@
+{
+  "schema": "agnes.office-fire-v3-assets.v1",
+  "source": "Project-authored deterministic NumPy procedural assets; user reference images guide form only",
+  "models_called": [],
+  "third_party_assets": [],
+  "seed": 2026101303,
+  "fire_edges": "Irregular broad alpha feather; black transparent RGB guard; independently shaped ceiling rolls",
+  "generator": "simulation/visual_assets/office_fire_v3_generate.py",
+  "files": [
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/ceiling_roll_a.png",
+      "bytes": 232014,
+      "sha256": "f0ed9573ddf73d3c282fa1c7a6107d61b94bd04afa1d344e7eb7d4a8bfbe673a"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/ceiling_roll_b.png",
+      "bytes": 232074,
+      "sha256": "b8b98712beb15f2e5da5dc971452c9491bb2aee0930fd72b21e09df7a15f41df"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/flame_a.png",
+      "bytes": 305107,
+      "sha256": "f11edf60bbcd930a07238e2f17bf4bd5da5d019f3ea6000046bace06c8577228"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/flame_b.png",
+      "bytes": 286301,
+      "sha256": "3ad7b3b252abc0c343583d1b121572dbcac1d3a040dc8b2df5601e687e7ee999"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/flame_c.png",
+      "bytes": 309812,
+      "sha256": "1423af2fcd2b1b94bc33e12f7d11408b66253011e5daf9cefbb76d008eccad5f"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/flame_core.png",
+      "bytes": 310364,
+      "sha256": "6ac457123ceeacb0a0db2072c3b9e1854b8eebd23867717b78b72a5b9683457c"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/life_fast.png",
+      "bytes": 897,
+      "sha256": "8985ed9743ee8bfc4ad34b85a0752cd4c9d01241988122d2039824ea900ddcdc"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/life_long.png",
+      "bytes": 951,
+      "sha256": "7f1e84857bdbee4e47929bebfa0e5183d8df5a484bf7cf82a8110dcddcb368e1"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/smoke_life.png",
+      "bytes": 573,
+      "sha256": "1a90b8b2357988cfb155d89a71a62c1f73da5fce3c470bf9be7829460e92af0e"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/smoke_upper_a.png",
+      "bytes": 297119,
+      "sha256": "18b3b90b0f31b914276454e9e2b9abe3baad24030fe44a39894841c87141a7a7"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/smoke_upper_b.png",
+      "bytes": 287643,
+      "sha256": "05695a7133d5175a4828265e0105693408bc21b8ea5f6828b6362a95a13397ac"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_v3_textures/smoke_wisp.png",
+      "bytes": 254723,
+      "sha256": "b3b63035d9f77387397517b8a31575238dffe25ce84eb7d0eaa446a9da6b7b9b"
+    }
+  ]
+}

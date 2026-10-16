@@ -1,0 +1,484 @@
+{
+  "schema": "agnes.building_skeleton.exchange.v1",
+  "schema_version": 1,
+  "metadata": {
+    "id": "office_fire_static",
+    "name": "室内办公室",
+    "visual_style": "office_fire",
+    "asset_license": "Project-authored geometry and procedural visuals; floor-plan image and indoor video supplied by the user as reference.",
+    "reference_directory": "artifacts/indoor-fire-20261012/reference",
+    "fidelity": "USER_SKETCH_LAYOUT_WITH_INFERRED_METRE_DIMENSIONS",
+    "reference_note": "The supplied drawing defines four rectangular rooms and four diagonal door marks. Metre dimensions and furniture geometry are inferred for robot clearance, not measured from the video.",
+    "layout_note": "Robot starts at the bottom facing north; large room ahead-left, two small rooms right, one small room ahead-right; six computer workstations in three rows left of the start.",
+    "physics_limitations": [
+      "Fire and smoke are visual effects, not a temperature or smoke-flow solver.",
+      "Door state must be observed at runtime; semantic connections are potential routes conditional on opening the door."
+    ],
+    "ceiling_height_m": 2.8
+  },
+  "coordinate_frame": "map",
+  "boundary": {
+    "min_x": -9,
+    "max_x": 9,
+    "min_y": -8,
+    "max_y": 8
+  },
+  "walls": [
+    {
+      "id": "outer_south",
+      "a": [
+        -9,
+        -8
+      ],
+      "b": [
+        9,
+        -8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "outer_east",
+      "a": [
+        9,
+        -8
+      ],
+      "b": [
+        9,
+        8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "outer_north",
+      "a": [
+        9,
+        8
+      ],
+      "b": [
+        -9,
+        8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "outer_west",
+      "a": [
+        -9,
+        8
+      ],
+      "b": [
+        -9,
+        -8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "large_south",
+      "a": [
+        -9,
+        3.8
+      ],
+      "b": [
+        0,
+        3.8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "large_east",
+      "a": [
+        0,
+        3.8
+      ],
+      "b": [
+        0,
+        8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "near_west",
+      "a": [
+        4.5,
+        -8
+      ],
+      "b": [
+        4.5,
+        -3.5
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "right_divider",
+      "a": [
+        4.5,
+        -3.5
+      ],
+      "b": [
+        9,
+        -3.5
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "middle_west",
+      "a": [
+        4.5,
+        -3.5
+      ],
+      "b": [
+        4.5,
+        0
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "middle_north",
+      "a": [
+        4.5,
+        0
+      ],
+      "b": [
+        9,
+        0
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "front_west",
+      "a": [
+        4.5,
+        3.8
+      ],
+      "b": [
+        4.5,
+        8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    },
+    {
+      "id": "front_south",
+      "a": [
+        4.5,
+        3.8
+      ],
+      "b": [
+        9,
+        3.8
+      ],
+      "thickness": 0.15,
+      "height": 2.8
+    }
+  ],
+  "rooms": [
+    {
+      "id": "Large_Room",
+      "name": "正前方大房间",
+      "type": "room",
+      "bounds": {
+        "min_x": -9,
+        "max_x": 0,
+        "min_y": 3.8,
+        "max_y": 8
+      },
+      "connectors": [
+        "Cross_Hall"
+      ]
+    },
+    {
+      "id": "Right_Near_Room",
+      "name": "右侧近端小房间",
+      "type": "room",
+      "bounds": {
+        "min_x": 4.5,
+        "max_x": 9,
+        "min_y": -8,
+        "max_y": -3.5
+      },
+      "connectors": [
+        "Entry_Hall"
+      ]
+    },
+    {
+      "id": "Right_Middle_Room",
+      "name": "右侧中部小房间",
+      "type": "room",
+      "bounds": {
+        "min_x": 4.5,
+        "max_x": 9,
+        "min_y": -3.5,
+        "max_y": 0
+      },
+      "connectors": [
+        "Main_Corridor"
+      ]
+    },
+    {
+      "id": "Right_Front_Room",
+      "name": "右前方小房间",
+      "type": "room",
+      "bounds": {
+        "min_x": 4.5,
+        "max_x": 9,
+        "min_y": 3.8,
+        "max_y": 8
+      },
+      "connectors": [
+        "Upper_Connector"
+      ]
+    }
+  ],
+  "corridors": [
+    {
+      "id": "Entry_Hall",
+      "name": "入口大厅",
+      "type": "corridor",
+      "bounds": {
+        "min_x": -3,
+        "max_x": 4.5,
+        "min_y": -8,
+        "max_y": -5
+      },
+      "connectors": [
+        "Start",
+        "Office_Aisle",
+        "Main_Corridor",
+        "Right_Near_Room"
+      ]
+    },
+    {
+      "id": "Office_Aisle",
+      "name": "办公工位旁通道",
+      "type": "corridor",
+      "bounds": {
+        "min_x": -3,
+        "max_x": 0,
+        "min_y": -5,
+        "max_y": 1.8
+      },
+      "connectors": [
+        "Entry_Hall",
+        "Main_Corridor",
+        "Cross_Hall"
+      ]
+    },
+    {
+      "id": "Main_Corridor",
+      "name": "室内主通道",
+      "type": "corridor",
+      "bounds": {
+        "min_x": 0,
+        "max_x": 4.5,
+        "min_y": -5,
+        "max_y": 1.8
+      },
+      "connectors": [
+        "Entry_Hall",
+        "Office_Aisle",
+        "Cross_Hall",
+        "Right_Middle_Room"
+      ]
+    },
+    {
+      "id": "Cross_Hall",
+      "name": "前方横向通道",
+      "type": "corridor",
+      "bounds": {
+        "min_x": -9,
+        "max_x": 4.5,
+        "min_y": 1.8,
+        "max_y": 3.8
+      },
+      "connectors": [
+        "Office_Aisle",
+        "Main_Corridor",
+        "Large_Room",
+        "Upper_Connector"
+      ]
+    },
+    {
+      "id": "Upper_Connector",
+      "name": "右前方连接通道",
+      "type": "corridor",
+      "bounds": {
+        "min_x": 0,
+        "max_x": 4.5,
+        "min_y": 3.8,
+        "max_y": 8
+      },
+      "connectors": [
+        "Cross_Hall",
+        "Right_Front_Room"
+      ]
+    }
+  ],
+  "doors": [
+    {
+      "id": "Large_Door",
+      "at": [
+        -3.9,
+        3.8
+      ],
+      "width": 1.25,
+      "height": 2.15,
+      "orientation": 0,
+      "connects": [
+        "Cross_Hall",
+        "Large_Room"
+      ],
+      "mechanism": "hinge",
+      "initial_state": "CLOSED",
+      "interaction_pose": {
+        "x": -3.9,
+        "y": 2.7,
+        "yaw": 1.5707963267948966
+      }
+    },
+    {
+      "id": "Right_Near_Door",
+      "at": [
+        4.5,
+        -6.0
+      ],
+      "width": 1.25,
+      "height": 2.15,
+      "orientation": -1.5707963267948966,
+      "connects": [
+        "Entry_Hall",
+        "Right_Near_Room"
+      ],
+      "mechanism": "hinge",
+      "initial_state": "CLOSED",
+      "interaction_pose": {
+        "x": 3.4,
+        "y": -6,
+        "yaw": 0
+      }
+    },
+    {
+      "id": "Right_Middle_Door",
+      "at": [
+        4.5,
+        -1.75
+      ],
+      "width": 1.25,
+      "height": 2.15,
+      "orientation": -1.5707963267948966,
+      "connects": [
+        "Main_Corridor",
+        "Right_Middle_Room"
+      ],
+      "mechanism": "hinge",
+      "initial_state": "CLOSED",
+      "interaction_pose": {
+        "x": 3.4,
+        "y": -1.75,
+        "yaw": 0
+      }
+    },
+    {
+      "id": "Right_Front_Door",
+      "at": [
+        4.5,
+        5.7
+      ],
+      "width": 1.25,
+      "height": 2.15,
+      "orientation": -1.5707963267948966,
+      "connects": [
+        "Upper_Connector",
+        "Right_Front_Room"
+      ],
+      "mechanism": "hinge",
+      "initial_state": "CLOSED",
+      "interaction_pose": {
+        "x": 3.4,
+        "y": 5.7,
+        "yaw": 0
+      }
+    }
+  ],
+  "static_obstacles": [
+    {
+      "id": "office_workstation_1",
+      "bounds": {
+        "min_x": -7.5,
+        "max_x": -5.7,
+        "min_y": -5.62,
+        "max_y": -4.07
+      }
+    },
+    {
+      "id": "office_workstation_2",
+      "bounds": {
+        "min_x": -5.3,
+        "max_x": -3.5,
+        "min_y": -5.62,
+        "max_y": -4.07
+      }
+    },
+    {
+      "id": "office_workstation_3",
+      "bounds": {
+        "min_x": -7.5,
+        "max_x": -5.7,
+        "min_y": -3.02,
+        "max_y": -1.47
+      }
+    },
+    {
+      "id": "office_workstation_4",
+      "bounds": {
+        "min_x": -5.3,
+        "max_x": -3.5,
+        "min_y": -3.02,
+        "max_y": -1.47
+      }
+    },
+    {
+      "id": "office_workstation_5",
+      "bounds": {
+        "min_x": -7.5,
+        "max_x": -5.7,
+        "min_y": -0.42,
+        "max_y": 1.13
+      }
+    },
+    {
+      "id": "office_workstation_6",
+      "bounds": {
+        "min_x": -5.3,
+        "max_x": -3.5,
+        "min_y": -0.42,
+        "max_y": 1.13
+      }
+    }
+  ],
+  "start_poses": [
+    {
+      "id": "Start",
+      "name": "办公室入口出生点",
+      "x": 0,
+      "y": -6.7,
+      "yaw": 1.5707963267948966,
+      "semantic_location": "Entry_Hall",
+      "connectors": [
+        "Entry_Hall"
+      ]
+    }
+  ],
+  "optional_navigation_constraints": {
+    "resolution": 0.05
+  }
+}

@@ -1,0 +1,29 @@
+from pathlib import Path
+import runpy,json,time,hashlib,subprocess,re
+import numpy as np
+R=Path('/data-ssd/zhongchengkai/agnes');O=R/'artifacts/demo-project-film-20261015/continuous-narration-v16';V=R/'artifacts/demo-project-film-20261014/revision-agh-narration-v9/voice';F=R/'runtime/ros2-jazzy/.pixi/envs/default/bin/ffmpeg'
+def main():
+ assert Path.cwd()==R
+ support=runpy.run_path(str(R/'scripts/demo-video/synthesize-qwen-narration-sample.py'),run_name='tts_support');torch=support['torch'];sf=support['sf'];Q=support['Qwen3TTSModel'];sha=support['sha']
+ plan=json.loads((V/'narration-plan-AGH-v9.json').read_text());auth=json.loads((R/plan['authorization_file']).read_text());assert auth['authorized'] and auth['scope']=='Video post-production narration only'
+ assert sha(R/plan['voice_reference_file'])==plan['voice_reference_sha256'] and sha(R/plan['saved_voice_prompt'])==plan['saved_voice_prompt_sha256']
+ provenance=json.loads((R/plan['source_model_provenance_file']).read_text());modelpath=R/provenance['model_path']
+ for rec in provenance['files']:assert sha(modelpath/rec['file'])==rec['sha256']
+ print('LOADING_APPROVED_VOICE09',flush=True)
+ model=Q.from_pretrained(str(modelpath),device_map='cuda:0',dtype=torch.bfloat16,attn_implementation='sdpa',local_files_only=True);prompt=torch.load(R/plan['saved_voice_prompt'],map_location='cpu',weights_only=False)
+ pieces=[('task_loop','大任务不能直接变成电机指令。AGH调用任务模型，结合已有观测和工具定义，组织查看环境、接近房门、识门、开门等步骤。框架负责检查参数与权限，再通过工具接口交给机器人系统。一个动作返回处理中时，系统继续等待同一操作的实际结果，只有反馈确认完成，才进入后续步骤。'),('vision-head','机器人看到的相机图像，会作为图片输入AGH中的视觉子会话。模型分析画面中的人员和房门，返回图像里的目标位置与置信度，')]
+ records=[]
+ for i,(name,text)in enumerate(pieces):
+  folder=O/'voice'/name;folder.mkdir(parents=True,exist_ok=False);(folder/'text.txt').write_text(text)
+  torch.manual_seed(202610151616+i);start=time.monotonic();print('SYNTHESIZING_ONE_CONTINUOUS_UTTERANCE',name,flush=True)
+  audio,sr=model.generate_voice_clone(text=text,language='Chinese',voice_clone_prompt=prompt,non_streaming_mode=True,max_new_tokens=2048)
+  w=np.asarray(audio[0]);assert np.isfinite(w).all();sf.write(folder/'raw.wav',w,sr,subtype='PCM_16')
+  step=round(sr*.01);rms=np.array([np.sqrt(np.mean(w[j:j+step]**2))for j in range(0,len(w),step)]);active=np.flatnonzero(rms>.001);assert len(active)>0
+  lo=max(0,active[0]*step-round(sr*.06));hi=min(len(w),(active[-1]+1)*step+round(sr*.06));trim=w[lo:hi];sf.write(folder/'trimmed.wav',trim,sr,subtype='PCM_16')
+  u=len(re.findall(r'[\u4e00-\u9fffA-Za-z0-9]',text));target=u/4.4;tempo=len(trim)/sr/target;assert .6<tempo<1.7
+  subprocess.run([str(F),'-nostdin','-v','error','-n','-i',str(folder/'trimmed.wav'),'-af',f'atempo={tempo:.14f},highpass=f=60,loudnorm=I=-18:TP=-2:LRA=7','-ar','48000','-ac','1','-c:a','pcm_f32le',str(folder/'voice.wav')],check=True)
+  out,rr=sf.read(folder/'voice.wav');assert rr==48000 and np.isfinite(out).all() and np.max(np.abs(out))<.99
+  rec={'name':name,'text':text,'seed':202610151616+i,'raw_duration':len(w)/sr,'trimmed_duration':len(trim)/sr,'target_duration':target,'actual_duration':len(out)/rr,'atempo':tempo,'pitch_preserving':True,'units':u,'units_per_second':u/(len(out)/rr),'generation_seconds':time.monotonic()-start,'voice_sha256':sha(folder/'voice.wav'),'continuous_AGH_sentence':True,'separate_letter_splice':False};records.append(rec);print(json.dumps(rec,ensure_ascii=False),flush=True)
+ report={'voice_id':'09','model':plan['model'],'reference_sha256':plan['voice_reference_sha256'],'prompt_sha256':plan['saved_voice_prompt_sha256'],'authorization_file':plan['authorization_file'],'scope':'Video post-production narration only','pieces':records,'model_calls':2,'robot_calls':0,'cloud_calls':0,'purpose':'Continuous mixed Chinese and English sentence intonation without separate AGH insert'}
+ (O/'voice-generation-v16.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False),flush=True)
+if __name__=='__main__':main()

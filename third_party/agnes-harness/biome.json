@@ -1,0 +1,77 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.12/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/gen",
+      "!**/generated",
+      "!**/dist",
+      "!**/node_modules",
+      "!docs",
+      "!packages/web-ui/src/conversation/tailwind.css",
+      "!packages/base/fixtures/tool-schemas",
+      "!packages/cordis",
+      "!packages/cosmokit"
+    ]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 110
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "asNeeded"
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "packages/web-ui/src/**",
+        "packages/resource-control-web/src/**",
+        "packages/web/src/admin/**"
+      ],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off",
+            "noNoninteractiveElementToInteractiveRole": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/web/public/style.css"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noImportantStyles": "off"
+          },
+          "style": {
+            "noDescendingSpecificity": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "packages/host/test/computer-use/evidence/labs/windows-x64-live-admission-2026-09-20.json"
+      ],
+      "formatter": {
+        "enabled": false
+      }
+    }
+  ]
+}

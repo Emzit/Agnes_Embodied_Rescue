@@ -1,0 +1,62 @@
+{
+  "schema": "agnes.office-fire-sprites.v2",
+  "source": "Project-authored deterministic procedural fire sprites",
+  "reference": "Three user-supplied fire reference images: asymmetric wall tongues, ceiling rollover and warm illumination; no reference pixels copied",
+  "generator": "simulation/visual_assets/office_fire_generate.py",
+  "seed": 2026101222,
+  "third_party_assets": [],
+  "models_called": [],
+  "alpha": "RGBA with fully transparent borders; no soot/hole decal",
+  "files": [
+    {
+      "path": "simulation/visual_assets/office_fire_textures/ceiling_roll_a.png",
+      "bytes": 243247,
+      "sha256": "51bef5da89c89bb713372ba073dd36ce8f203ac801c36e1c4aa8c80b751ad9e8"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/ceiling_roll_b.png",
+      "bytes": 189918,
+      "sha256": "34a94ba840b50f84c8dd8f29b2d8535b3fdbc21e735fad4162f1fa8a43ccb81b"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/flame_life.png",
+      "bytes": 871,
+      "sha256": "6d6eaf3ba52c4d2eefb006544724cc1f56228d3aec05fe3058c36eca18d808f5"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/smoke.png",
+      "bytes": 267931,
+      "sha256": "4166e9b8828273f0d221af0d47479b8c1de1699513efab01ab7b741f5b257763"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/smoke_life.png",
+      "bytes": 529,
+      "sha256": "e1a921be967532c5bd4d5c8e74d6b9f123164264019a03ada8ffefb2a055561e"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/spark.png",
+      "bytes": 22151,
+      "sha256": "dff0a07dd75093d86cbf6058bd70b66021fde7fd3ac036749bd7d90630e47d9f"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/spark_life.png",
+      "bytes": 946,
+      "sha256": "2c808984c7f48a4731b37958f065c0f2aa671afaa237694bd83523081ee7df35"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/wall_flame_a.png",
+      "bytes": 347565,
+      "sha256": "7441a01e6592fd920acb59602e337f7f69d75de665ca201021de747b29902562"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/wall_flame_b.png",
+      "bytes": 359465,
+      "sha256": "e719431002a59ea49a62e965184f54d88122f57f8395c7bf145fcc3d25baa47d"
+    },
+    {
+      "path": "simulation/visual_assets/office_fire_textures/wall_flame_c.png",
+      "bytes": 359790,
+      "sha256": "b50c2290c6fbb0aca1fa8d0124605a778a76d9649b926f0f57f67f978c7c5a77"
+    }
+  ]
+}

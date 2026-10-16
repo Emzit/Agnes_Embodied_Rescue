@@ -1,0 +1,31 @@
+{
+  "name": "@agnes/web-units",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Stable built-in web unit identities and contributes.client contracts for the Agnes web shell",
+  "exports": {
+    ".": "./src/index.ts",
+    "./diagnostics-types": "./src/diagnostics-types.ts",
+    "./diagnostics-zip": "./src/diagnostics-zip.ts",
+    "./diagnostics-viewer": "./src/diagnostics-viewer.ts",
+    "./diagnostics-locale": "./src/diagnostics-locale.ts",
+    "./trace-locale": "./src/trace-locale.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@agnes/protocol": "workspace:*",
+    "@agnes/web-ui": "workspace:*",
+    "@agnes/web-slots": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "license": "Apache-2.0"
+}

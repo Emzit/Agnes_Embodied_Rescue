@@ -1,0 +1,21 @@
+[workspace]
+name = "agnes-ros2-jazzy"
+version = "0.1.0"
+channels = ["https://prefix.dev/robostack-jazzy", "https://prefix.dev/conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+ros-jazzy-ros-base = "*"
+colcon-common-extensions = "*"
+ros-jazzy-demo-nodes-cpp = "*"
+ros-jazzy-nav2-msgs = "*"
+ros-jazzy-ros-gz-sim = "*"
+ros-jazzy-ros-gz-bridge = "*"
+ros-jazzy-nav2-bt-navigator = "*"
+ros-jazzy-nav2-controller = "*"
+ros-jazzy-nav2-planner = "*"
+ros-jazzy-nav2-behaviors = "*"
+ros-jazzy-nav2-lifecycle-manager = "*"
+ros-jazzy-nav2-map-server = "*"
+ros-jazzy-nav2-navfn-planner = "*"
+ros-jazzy-nav2-regulated-pure-pursuit-controller = "*"

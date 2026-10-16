@@ -1,0 +1,73 @@
+# Security and trust: define execution boundaries
+
+English | [简体中文](security.zh-CN.md)
+
+<a id="安全与信任让执行有边界"></a>
+
+[Documentation](../README.md) · [Recovery](sessions.md) · [Report a vulnerability](../../SECURITY.md)
+
+**Built for trust** means making concrete choices: which code version to trust, which actions to allow, where execution may reach, and how to inspect results. This guide explains those choices and their limits for first-time users, plugin authors, and FDE integrators.
+
+AGH can execute tools, write files, and connect to external systems. Model text, webpages, MCP results, Skills, and plugin configuration are not user authorization. Choose a working directory and acceptable capabilities before approving specific actions.
+
+<a id="三类不同的信任"></a>
+
+## Three kinds of trust
+
+| Boundary | Meaning | What it does not establish |
+| --- | --- | --- |
+| Package trust | Accept code with a specific content hash and capability declaration | Authorization for all future versions |
+| Tool approval | Allow an action once or within the scope of the selected option | Successful creation of an operating-system sandbox |
+| Sandbox / execution constraints | Limit execution according to actual platform probes and policy | Isolation of malicious in-process plugins |
+
+Ordinary third-party Cordis plugins are trusted in-process code. Trusting one may let it use Node capabilities available to the process. `ctx.extension()` constrains the extension API, not arbitrary Node code. Review both source and declared capabilities before installing a third-party package.
+
+<a id="审批"></a>
+
+## Approvals
+
+The default interactive flow shows the tool and available decisions when needed. One-time approval, session approval, persistent grants, and denial have different scopes. The backend makes the final decision using current credentials and policy. On expiry, disconnection, or competing clients, the decision stored by the backend is authoritative.
+
+The Web approval card shows locating fields such as the path or command first and states how many characters of a long value are shown. Session approval covers every later call of the same tool in that session, and the button names the tool. When the call cannot be shown in full, the card says so and does not offer session approval; only one-time approval or denial remains.
+
+`approvals.mode` accepts `manual`, `smart`, and `off`. Web **Full permissions** (`完全权限`) and TUI `/yolo` skip remaining approvals in the current session and allow file tools to read and write outside the selected workspace. The workspace remains the default directory for relative paths. Explicit security denials, protected secret paths, operating-system permissions, and command sandbox constraints still apply. Do not make skipped approvals a beginner example or automation default.
+
+Under Full permissions the Agnes home's own state — `secrets/`, `auth/` and `profiles/` — stays readable to the file tools but is not writable: `write`, `edit` and the other file-changing operations are refused with `denied by policy`, so a session cannot rewrite `profile.yaml` (for example to set `approvals.mode: off`) and carry that into later sessions. The same refusal applies when the selected workspace itself contains that state. Known limitation: Full permissions do not restrict the `shell` tool's file access, so a command can still modify these files. Closing that gap needs an operating-system sandbox and is not covered by this protection.
+
+Web **Workspace edits** (`工作区内修改`) limits file access to the selected workspace; command execution still follows the approval policy. A path outside that workspace is refused with guidance to switch to Full permissions or select its directory as the workspace, without opening an additional approval request.
+
+The default verifier distinguishes repeated writes from read-only calls using the policy recorded for each call. Read-only polling does not trigger `repeated_write`; missing or unverifiable policy remains conservative, and the separate no-progress check still applies. MCP tools must advertise `readOnlyHint: true` to be classified as read-only. When an interactive verifier approval is allowed during the current run, AGH accepts the proposed completion and ends that turn. It does not ask the model to finish again or waive verification of future turns. Additional instructions queued while approval is pending are retained for a new turn, with their original author and trust.
+
+A request to edit files is not permission for arbitrary plugin execution. Plugins should accurately declare read-only/destructive behavior, open-world access, replayability, and approval requirements. Metadata must match actual effects.
+
+<a id="平台与进程"></a>
+
+## Platforms and processes
+
+Default command execution requires an available sandbox: bubblewrap on Linux and Seatbelt on macOS. If unavailable and policy requires refusal, execution returns `SANDBOX_UNAVAILABLE`. Successful Host startup does not prove every tool can execute. Some Windows security capabilities remain subject to implementation and external verification limits; see [limitations](../reference/limitations.md).
+
+Local Web relies on loopback binding and exact Origin/Host checks, rather than internet user authentication. Do not expose it directly to the public internet. A manual `--connect` must identify the target explicitly. Windows named pipes also check process ownership against discovery records.
+
+Computer Use is another privileged surface. Its local profile configuration still requires runtime components, a suitable model, and operating-system permissions. `computer-use permissions grant` starts an authorization flow; `install/restart` changes runtime components. Begin read-only diagnosis with `computer-use status` and `doctor computer-use`; do not automatically grant system permissions for documentation checks.
+
+<a id="skill-管理的删除边界"></a>
+
+## Skill deletion boundaries
+
+Permanent deletion and priority changes require server-side admin authority and `resources.skills.write`, through the Web management BFF or Node SDK. Priority overrides do not grant trust or enablement and do not expand ordinary plugin API permissions.
+
+Permanent disk Skill deletion covers every file in the selected directory. User sources may be shared by other applications. Package/runtime sources cannot be deleted through this interface. Deletion verifies the registered source, revision, and file identities before proceeding, and cannot be canceled after acceptance. Partial failure retains deletion markers, blocks re-enabling, and permits explicit constrained retries. Another same-name candidate may take over, subject to its own authorization. See [Skills](skills.md#permanently-delete-a-disk-skill) for the complete procedure and limits.
+
+<a id="密钥和持久数据"></a>
+
+## Secrets and persistent data
+
+The configuration service stores provider keys in a credential backend. Public configuration retains only `secret://...` references. MCP CLI rejects plaintext options such as `--token` and `--env`, accepting constrained references instead. A reference does not grant arbitrary permission to read a secret.
+
+`AGH_HOME` contains sessions, configuration, grants, audits, and caches. Reduced logging does not mean conversation text is free of sensitive information. Review user input, tool arguments, and paths before exporting, taking screenshots, or publishing errors. Do not commit `secrets/`, `auth/`, a complete home, real traces, or credential files. `publicConfig` reaches the browser and must never contain secrets or secret references.
+
+File tools and sandbox policies protect workspace `.agh/secrets` and legacy `.agnes/secrets`. Do not point AGH's home at another product's data directory. Legacy `AGNES_HOME` is a compatibility option with no automatic migration.
+
+Check the target system before retrying an operation with unknown side effects. Recovering a backend database cannot recall an email, undo a network write, or reverse a physical device action.
+
+Implementation: [default profile](../../packages/host/templates/local-dev.yaml), [ordinary row API](../../packages/host/src/ext-host/row-extension-api.ts), [MCP argument policy](../../packages/resource-control-cli/src/resources.ts), [Web server](../../packages/web-server/src/server.ts).
